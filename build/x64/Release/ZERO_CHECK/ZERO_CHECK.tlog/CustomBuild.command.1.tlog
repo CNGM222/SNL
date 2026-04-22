@@ -1,0 +1,10 @@
+^C:\USERS\27120\DESKTOP\编译原理课设\BUILD\CMAKEFILES\4F12D99F89812D7598A8649E7192EBD9\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/27120/Desktop/编译原理课设 -BC:/Users/27120/Desktop/编译原理课设/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/27120/Desktop/编译原理课设/build/snl_compiler.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

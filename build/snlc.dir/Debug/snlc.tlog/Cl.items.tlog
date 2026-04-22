@@ -1,0 +1,6 @@
+C:\Users\27120\Desktop\编译原理课设\src\app\main.cpp;C:\Users\27120\Desktop\编译原理课设\build\snlc.dir\Debug\main.obj
+C:\Users\27120\Desktop\编译原理课设\src\lexical\lexical.cpp;C:\Users\27120\Desktop\编译原理课设\build\snlc.dir\Debug\lexical.obj
+C:\Users\27120\Desktop\编译原理课设\src\syntax\syntax.cpp;C:\Users\27120\Desktop\编译原理课设\build\snlc.dir\Debug\syntax.obj
+C:\Users\27120\Desktop\编译原理课设\src\semantic\semantic.cpp;C:\Users\27120\Desktop\编译原理课设\build\snlc.dir\Debug\semantic.obj
+C:\Users\27120\Desktop\编译原理课设\src\codegen\codegen.cpp;C:\Users\27120\Desktop\编译原理课设\build\snlc.dir\Debug\codegen.obj
+C:\Users\27120\Desktop\编译原理课设\src\driver\driver.cpp;C:\Users\27120\Desktop\编译原理课设\build\snlc.dir\Debug\driver.obj
