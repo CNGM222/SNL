@@ -71,15 +71,27 @@ public:
 
         emitText(".text");
         emitText(".globl main");
+        emitText(".globl __start");
+        emitText("");
+        emitText("__start:");
+        emitText("  j main");
+        emitText("  nop");
         emitText("");
 
         emitText("main:");
+        emitText("  addiu $sp, $sp, -8");
+        emitText("  sw $fp, " + std::to_string(kSavedFpOffset) + "($sp)");
+        emitText("  sw $ra, " + std::to_string(kSavedRaOffset) + "($sp)");
         emitText("  move $fp, $sp");
         GenContext mainCtx;
         mainCtx.proc = nullptr;
         for (auto& stmt : program_.body) {
             generateStmt(*stmt, mainCtx);
         }
+        emitText("  move $sp, $fp");
+        emitText("  lw $fp, " + std::to_string(kSavedFpOffset) + "($sp)");
+        emitText("  lw $ra, " + std::to_string(kSavedRaOffset) + "($sp)");
+        emitText("  addiu $sp, $sp, 8");
         emitText("  li $v0, 10");
         emitText("  syscall");
         emitText("");
@@ -99,6 +111,10 @@ public:
     }
 
 private:
+    static constexpr int kSavedFpOffset = 0;
+    static constexpr int kSavedRaOffset = 4;
+    static constexpr int kStaticLinkOffset = 8;
+
     struct GenContext {
         ProcInfo* proc = nullptr;
     };
@@ -149,7 +165,7 @@ private:
             steps = 0;
         }
         for (int i = 0; i < steps; ++i) {
-            emitText("  lw " + reg + ", 8(" + reg + ")");
+            emitText("  lw " + reg + ", " + std::to_string(kStaticLinkOffset) + "(" + reg + ")");
         }
         return reg;
     }
@@ -295,26 +311,13 @@ private:
         }
         ProcInfo* callee = stmt.callSymbol->proc;
         size_t n = std::min(callee->params.size(), stmt.callArgs.size());
+        int callBytes = static_cast<int>((n + 1) * 4);  // +1 for hidden static link
 
-        for (size_t i = n; i > 0; --i) {
-            size_t idx = i - 1;
-            Symbol* param = callee->params[idx];
-            string argReg;
-            if (param->byRef) {
-                if (stmt.callArgs[idx]->kind == ExprKind::Var && stmt.callArgs[idx]->var) {
-                    argReg = generateVarAddress(*stmt.callArgs[idx]->var, ctx);
-                } else {
-                    report(stmt.pos, "Argument for var parameter must be variable");
-                    argReg = regs_.acquire();
-                    emitText("  move " + argReg + ", $zero");
-                }
-            } else {
-                argReg = generateExpr(*stmt.callArgs[idx], ctx);
-            }
-            emitText("  addiu $sp, $sp, -4");
-            emitText("  sw " + argReg + ", 0($sp)");
-            regs_.release(argReg);
-        }
+        // Allocate one contiguous outgoing area:
+        //   0($sp): static link
+        //   4($sp): param1
+        //   8($sp): param2 ...
+        emitText("  addiu $sp, $sp, -" + std::to_string(callBytes));
 
         string slReg = regs_.acquire();
         if (callee->parentLevel == 0) {
@@ -330,15 +333,33 @@ private:
                 steps = 0;
             }
             for (int i = 0; i < steps; ++i) {
-                emitText("  lw " + slReg + ", 8(" + slReg + ")");
+                emitText("  lw " + slReg + ", " + std::to_string(kStaticLinkOffset) + "(" + slReg + ")");
             }
         }
-        emitText("  addiu $sp, $sp, -4");
         emitText("  sw " + slReg + ", 0($sp)");
         regs_.release(slReg);
 
+        for (size_t idx = 0; idx < n; ++idx) {
+            Symbol* param = callee->params[idx];
+            string argReg;
+            if (param->byRef) {
+                if (stmt.callArgs[idx]->kind == ExprKind::Var && stmt.callArgs[idx]->var) {
+                    argReg = generateVarAddress(*stmt.callArgs[idx]->var, ctx);
+                } else {
+                    report(stmt.pos, "Argument for var parameter must be variable");
+                    argReg = regs_.acquire();
+                    emitText("  move " + argReg + ", $zero");
+                }
+            } else {
+                argReg = generateExpr(*stmt.callArgs[idx], ctx);
+            }
+            int argOffset = static_cast<int>((idx + 1) * 4);
+            emitText("  sw " + argReg + ", " + std::to_string(argOffset) + "($sp)");
+            regs_.release(argReg);
+        }
+
         emitText("  jal " + callee->label);
-        emitText("  addiu $sp, $sp, " + std::to_string(static_cast<int>((n + 1) * 4)));
+        emitText("  addiu $sp, $sp, " + std::to_string(callBytes));
     }
 
     void generateStmt(const Stmt& stmt, const GenContext& ctx) {
@@ -425,8 +446,8 @@ private:
 
         emitText(info->label + ":");
         emitText("  addiu $sp, $sp, -8");
-        emitText("  sw $fp, 0($sp)");
-        emitText("  sw $ra, 4($sp)");
+        emitText("  sw $fp, " + std::to_string(kSavedFpOffset) + "($sp)");
+        emitText("  sw $ra, " + std::to_string(kSavedRaOffset) + "($sp)");
         emitText("  move $fp, $sp");
         if (info->localBytes > 0) {
             emitText("  addiu $sp, $sp, -" + std::to_string(align4(info->localBytes)));
@@ -440,8 +461,8 @@ private:
 
         emitText(info->endLabel + ":");
         emitText("  move $sp, $fp");
-        emitText("  lw $fp, 0($sp)");
-        emitText("  lw $ra, 4($sp)");
+        emitText("  lw $fp, " + std::to_string(kSavedFpOffset) + "($sp)");
+        emitText("  lw $ra, " + std::to_string(kSavedRaOffset) + "($sp)");
         emitText("  addiu $sp, $sp, 8");
         emitText("  jr $ra");
         emitText("");

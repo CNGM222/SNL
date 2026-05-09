@@ -1,0 +1,12 @@
+{输出1到5}
+
+program test
+var integer i;
+
+begin
+    i := 1;
+    while i < 6 do
+        write(i);
+        i := i + 1
+    endwh
+end.
