@@ -1,0 +1,86 @@
+1: reserved word: program
+1: ID, name=recnested
+2: reserved word: var
+3: reserved word: integer
+3: ID, name=ans
+3: ;
+5: reserved word: procedure
+5: ID, name=outer
+5: (
+5: reserved word: integer
+5: ID, name=n
+5: ;
+5: reserved word: var
+5: reserved word: integer
+5: ID, name=outv
+5: )
+5: ;
+6: reserved word: var
+7: reserved word: integer
+7: ID, name=base
+7: ;
+8: reserved word: procedure
+8: ID, name=inner
+8: (
+8: reserved word: integer
+8: ID, name=k
+8: ;
+8: reserved word: var
+8: reserved word: integer
+8: ID, name=acc
+8: )
+8: ;
+9: reserved word: begin
+10: reserved word: if
+10: ID, name=k
+10: =
+10: INTC, val=0
+10: reserved word: then
+11: reserved word: return
+12: reserved word: else
+13: ID, name=acc
+13: :=
+13: ID, name=acc
+13: +
+13: ID, name=base
+13: ;
+14: ID, name=inner
+14: (
+14: ID, name=k
+14: -
+14: INTC, val=1
+14: ,
+14: ID, name=acc
+14: )
+15: reserved word: fi
+16: reserved word: end
+17: reserved word: begin
+18: ID, name=base
+18: :=
+18: ID, name=n
+18: ;
+19: ID, name=outv
+19: :=
+19: INTC, val=0
+19: ;
+20: ID, name=inner
+20: (
+20: INTC, val=3
+20: ,
+20: ID, name=outv
+20: )
+21: reserved word: end
+23: reserved word: begin
+24: ID, name=outer
+24: (
+24: INTC, val=4
+24: ,
+24: ID, name=ans
+24: )
+24: ;
+25: reserved word: write
+25: (
+25: ID, name=ans
+25: )
+26: reserved word: end
+26: .

@@ -1,0 +1,15 @@
+Symbol Table
+============
+[scope level=0, owner=<global>]
+  - name=ans, kind=var, type=integer, level=0, offset=0, label=g_ans_0
+  - name=char, kind=type, type=char, level=0
+  - name=integer, kind=type, type=integer, level=0
+  - name=outer, kind=proc, type=<null>, level=0, label=proc_outer_1, params=2, locals=4
+  [scope level=1, owner=outer]
+    - name=base, kind=var, type=integer, level=1, offset=-4
+    - name=inner, kind=proc, type=<null>, level=1, label=proc_inner_2, params=2, locals=0
+    - name=n, kind=param, type=integer, level=1, offset=12, byRef=false
+    - name=outv, kind=param, type=integer, level=1, offset=16, byRef=true
+    [scope level=2, owner=inner]
+      - name=acc, kind=param, type=integer, level=2, offset=16, byRef=true
+      - name=k, kind=param, type=integer, level=2, offset=12, byRef=false

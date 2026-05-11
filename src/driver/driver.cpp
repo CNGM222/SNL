@@ -154,6 +154,7 @@ static void printUsage() {
 int runCompilerFromArgs(int argc, char** argv) {
     std::filesystem::path inputPath;
     std::filesystem::path outputAsmPath;
+    bool outputAsmSpecified = false;
     string mode = "all";
 
     for (int i = 1; i < argc; ++i) {
@@ -165,12 +166,14 @@ int runCompilerFromArgs(int argc, char** argv) {
             inputPath = argv[++i];
         } else if ((arg == "--output" || arg == "-o") && i + 1 < argc) {
             outputAsmPath = argv[++i];
+            outputAsmSpecified = true;
         } else if (arg == "--mode" && i + 1 < argc) {
             mode = argv[++i];
         } else if (inputPath.empty()) {
             inputPath = arg;
         } else if (outputAsmPath.empty()) {
             outputAsmPath = arg;
+            outputAsmSpecified = true;
         } else {
             std::cerr << "Unknown argument: " << arg << "\n";
             printUsage();
@@ -181,10 +184,6 @@ int runCompilerFromArgs(int argc, char** argv) {
     if (inputPath.empty()) {
         printUsage();
         return 1;
-    }
-
-    if (outputAsmPath.empty()) {
-        outputAsmPath = inputPath.parent_path() / (inputPath.stem().string() + ".asm");
     }
 
     string source;
@@ -200,11 +199,26 @@ int runCompilerFromArgs(int argc, char** argv) {
         source.erase(0, 3);
     }
 
-    std::filesystem::path tokensPath = inputPath.parent_path() / (inputPath.stem().string() + ".tokens.txt");
-    std::filesystem::path rdTreePath = inputPath.parent_path() / (inputPath.stem().string() + ".rd_tree.txt");
-    std::filesystem::path ll1TreePath = inputPath.parent_path() / (inputPath.stem().string() + ".ll1_tree.txt");
-    std::filesystem::path symbolsPath = inputPath.parent_path() / (inputPath.stem().string() + ".symbols.txt");
-    std::filesystem::path errorsPath = inputPath.parent_path() / (inputPath.stem().string() + ".errors.txt");
+    std::filesystem::path outputDir = inputPath.parent_path() / (inputPath.stem().string() + "_outputs");
+    std::error_code mkdirErr;
+    std::filesystem::create_directories(outputDir, mkdirErr);
+    if (mkdirErr) {
+        std::cerr << "Cannot create output directory: " << outputDir.string()
+                  << ", " << mkdirErr.message() << "\n";
+        return 1;
+    }
+
+    if (outputAsmSpecified) {
+        outputAsmPath = outputDir / outputAsmPath.filename();
+    } else {
+        outputAsmPath = outputDir / (inputPath.stem().string() + ".asm");
+    }
+
+    std::filesystem::path tokensPath = outputDir / (inputPath.stem().string() + ".tokens.txt");
+    std::filesystem::path rdTreePath = outputDir / (inputPath.stem().string() + ".rd_tree.txt");
+    std::filesystem::path ll1TreePath = outputDir / (inputPath.stem().string() + ".ll1_tree.txt");
+    std::filesystem::path symbolsPath = outputDir / (inputPath.stem().string() + ".symbols.txt");
+    std::filesystem::path errorsPath = outputDir / (inputPath.stem().string() + ".errors.txt");
 
     vector<Diagnostic> allDiagnostics;
 
@@ -305,6 +319,7 @@ int runCompilerFromArgs(int argc, char** argv) {
     }
 
     std::cout << "Input:       " << inputPath.string() << "\n";
+    std::cout << "Output Dir:  " << outputDir.string() << "\n";
     std::cout << "Tokens:      " << tokensPath.string() << "\n";
     if (runRD) {
         std::cout << "RD Tree:     " << rdTreePath.string() << "\n";

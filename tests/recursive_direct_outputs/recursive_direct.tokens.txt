@@ -1,0 +1,59 @@
+1: reserved word: program
+1: ID, name=recdirect
+2: reserved word: var
+3: reserved word: integer
+3: ID, name=ans
+3: ;
+5: reserved word: procedure
+5: ID, name=sumto
+5: (
+5: reserved word: integer
+5: ID, name=n
+5: ;
+5: reserved word: var
+5: reserved word: integer
+5: ID, name=outv
+5: )
+5: ;
+6: reserved word: begin
+7: reserved word: if
+7: ID, name=n
+7: <
+7: INTC, val=1
+7: reserved word: then
+8: reserved word: return
+9: reserved word: else
+10: ID, name=outv
+10: :=
+10: ID, name=outv
+10: +
+10: ID, name=n
+10: ;
+11: ID, name=sumto
+11: (
+11: ID, name=n
+11: -
+11: INTC, val=1
+11: ,
+11: ID, name=outv
+11: )
+12: reserved word: fi
+13: reserved word: end
+15: reserved word: begin
+16: ID, name=ans
+16: :=
+16: INTC, val=0
+16: ;
+17: ID, name=sumto
+17: (
+17: INTC, val=5
+17: ,
+17: ID, name=ans
+17: )
+17: ;
+18: reserved word: write
+18: (
+18: ID, name=ans
+18: )
+19: reserved word: end
+19: .

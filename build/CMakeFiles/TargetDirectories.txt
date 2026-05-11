@@ -1,3 +1,4 @@
 C:/Users/27120/Desktop/编译原理课设/build/CMakeFiles/snlc.dir
+C:/Users/27120/Desktop/编译原理课设/build/CMakeFiles/snlc_webui.dir
 C:/Users/27120/Desktop/编译原理课设/build/CMakeFiles/ALL_BUILD.dir
 C:/Users/27120/Desktop/编译原理课设/build/CMakeFiles/ZERO_CHECK.dir

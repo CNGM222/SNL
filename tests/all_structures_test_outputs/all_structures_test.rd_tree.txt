@@ -1,0 +1,117 @@
+ProK
+  PheadK allstruct
+  TypeK
+    DecK IntegerK idx
+    DecK CharK letter
+    DecK ArrayK[1..5] of IntegerK intarr
+    DecK RecordK person
+    DecK RecordK bag
+  VarK
+    DecK IdK(idx) i total
+    DecK IdK(letter) ch
+    DecK IdK(intarr) a
+    DecK IdK(person) p
+    DecK IdK(bag) b
+  ProcDecK fill
+    ParamK
+      DecK var param: IdK(intarr) arr
+      DecK value param: IntegerK base
+    VarK
+      DecK IntegerK k
+    StmLK
+      StmtK Assign
+        ExpK k IdV
+        ExpK Const 1
+      StmtK While
+        ExpK Op <
+          ExpK k IdV
+          ExpK Const 6
+        StmLK
+          StmtK Assign
+            ExpK arr[...] IdV
+            ExpK Op +
+              ExpK base IdV
+              ExpK k IdV
+          StmtK Assign
+            ExpK k IdV
+            ExpK Op +
+              ExpK k IdV
+              ExpK Const 1
+  ProcDecK touch
+    ParamK
+      DecK var param: IdK(person) pp
+      DecK var param: IdK(bag) bb
+      DecK value param: IntegerK v
+      DecK value param: CharK t
+    StmLK
+      StmtK Assign
+        ExpK pp.age IdV
+        ExpK v IdV
+      StmtK Assign
+        ExpK pp.tag IdV
+        ExpK t IdV
+      StmtK Assign
+        ExpK pp.scores[...] IdV
+        ExpK v IdV
+      StmtK Assign
+        ExpK pp.scores[...] IdV
+        ExpK Op +
+          ExpK v IdV
+          ExpK Const 1
+      StmtK Assign
+        ExpK pp.scores[...] IdV
+        ExpK Op +
+          ExpK v IdV
+          ExpK Const 2
+      StmtK Assign
+        ExpK bb.id IdV
+        ExpK pp.age IdV
+      StmtK Assign
+        ExpK bb.nums[...] IdV
+        ExpK pp.scores[...] IdV
+      StmtK Assign
+        ExpK bb.mark IdV
+        ExpK pp.tag IdV
+  StmLK
+    StmtK Assign
+      ExpK i IdV
+      ExpK Const 1
+    StmtK Assign
+      ExpK total IdV
+      ExpK Const 0
+    StmtK Assign
+      ExpK ch IdV
+      ExpK Const 'A'
+    StmtK Call fill
+      ExpK a IdV
+      ExpK Const 10
+    StmtK Call touch
+      ExpK p IdV
+      ExpK b IdV
+      ExpK Const 20
+      ExpK ch IdV
+    StmtK Assign
+      ExpK total IdV
+      ExpK Op +
+        ExpK Op +
+          ExpK a[...] IdV
+          ExpK p.scores[...] IdV
+        ExpK b.nums[...] IdV
+    StmtK If
+      ExpK Op <
+        ExpK total IdV
+        ExpK Const 100
+      ThenK
+        StmLK
+          StmtK Write
+            ExpK total IdV
+      ElseK
+        StmLK
+          StmtK Write
+            ExpK b.id IdV
+    StmtK Write
+      ExpK p.age IdV
+    StmtK Write
+      ExpK p.scores[...] IdV
+    StmtK Write
+      ExpK b.mark IdV

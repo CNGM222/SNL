@@ -15,3 +15,9 @@ add_executable(snlc
 )
 
 target_include_directories(snlc PRIVATE src)
+
+add_executable(snlc_webui
+    src/webui/main.cpp
+)
+
+target_link_libraries(snlc_webui PRIVATE ws2_32)

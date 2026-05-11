@@ -1,0 +1,88 @@
+1: reserved word: program
+1: ID, name=recmutual
+2: reserved word: var
+3: reserved word: integer
+3: ID, name=n
+3: ,
+3: ID, name=oddflag
+3: ;
+5: reserved word: procedure
+5: ID, name=odd
+5: (
+5: reserved word: integer
+5: ID, name=x
+5: ;
+5: reserved word: var
+5: reserved word: integer
+5: ID, name=outv
+5: )
+5: ;
+6: reserved word: begin
+7: reserved word: if
+7: ID, name=x
+7: =
+7: INTC, val=0
+7: reserved word: then
+8: ID, name=outv
+8: :=
+8: INTC, val=0
+9: reserved word: else
+10: ID, name=even
+10: (
+10: ID, name=x
+10: -
+10: INTC, val=1
+10: ,
+10: ID, name=outv
+10: )
+11: reserved word: fi
+12: reserved word: end
+14: reserved word: procedure
+14: ID, name=even
+14: (
+14: reserved word: integer
+14: ID, name=x
+14: ;
+14: reserved word: var
+14: reserved word: integer
+14: ID, name=outv
+14: )
+14: ;
+15: reserved word: begin
+16: reserved word: if
+16: ID, name=x
+16: =
+16: INTC, val=0
+16: reserved word: then
+17: ID, name=outv
+17: :=
+17: INTC, val=1
+18: reserved word: else
+19: ID, name=odd
+19: (
+19: ID, name=x
+19: -
+19: INTC, val=1
+19: ,
+19: ID, name=outv
+19: )
+20: reserved word: fi
+21: reserved word: end
+23: reserved word: begin
+24: ID, name=n
+24: :=
+24: INTC, val=7
+24: ;
+25: ID, name=odd
+25: (
+25: ID, name=n
+25: ,
+25: ID, name=oddflag
+25: )
+25: ;
+26: reserved word: write
+26: (
+26: ID, name=oddflag
+26: )
+27: reserved word: end
+27: .

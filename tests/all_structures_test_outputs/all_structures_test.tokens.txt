@@ -1,0 +1,310 @@
+1: reserved word: program
+1: ID, name=allstruct
+3: reserved word: type
+4: ID, name=idx
+4: =
+4: reserved word: integer
+4: ;
+5: ID, name=letter
+5: =
+5: reserved word: char
+5: ;
+6: ID, name=intarr
+6: =
+6: reserved word: array
+6: [
+6: INTC, val=1
+6: ..
+6: INTC, val=5
+6: ]
+6: reserved word: of
+6: reserved word: integer
+6: ;
+7: ID, name=person
+7: =
+7: reserved word: record
+8: reserved word: integer
+8: ID, name=age
+8: ;
+9: reserved word: char
+9: ID, name=tag
+9: ;
+10: reserved word: array
+10: [
+10: INTC, val=1
+10: ..
+10: INTC, val=3
+10: ]
+10: reserved word: of
+10: reserved word: integer
+10: ID, name=scores
+10: ;
+11: reserved word: end
+11: ;
+12: ID, name=bag
+12: =
+12: reserved word: record
+13: reserved word: integer
+13: ID, name=id
+13: ;
+14: reserved word: array
+14: [
+14: INTC, val=1
+14: ..
+14: INTC, val=5
+14: ]
+14: reserved word: of
+14: reserved word: integer
+14: ID, name=nums
+14: ;
+15: reserved word: char
+15: ID, name=mark
+15: ;
+16: reserved word: end
+16: ;
+18: reserved word: var
+19: ID, name=idx
+19: ID, name=i
+19: ,
+19: ID, name=total
+19: ;
+20: ID, name=letter
+20: ID, name=ch
+20: ;
+21: ID, name=intarr
+21: ID, name=a
+21: ;
+22: ID, name=person
+22: ID, name=p
+22: ;
+23: ID, name=bag
+23: ID, name=b
+23: ;
+25: reserved word: procedure
+25: ID, name=fill
+25: (
+25: reserved word: var
+25: ID, name=intarr
+25: ID, name=arr
+25: ;
+25: reserved word: integer
+25: ID, name=base
+25: )
+25: ;
+26: reserved word: var
+27: reserved word: integer
+27: ID, name=k
+27: ;
+28: reserved word: begin
+29: ID, name=k
+29: :=
+29: INTC, val=1
+29: ;
+30: reserved word: while
+30: ID, name=k
+30: <
+30: INTC, val=6
+30: reserved word: do
+31: ID, name=arr
+31: [
+31: ID, name=k
+31: ]
+31: :=
+31: ID, name=base
+31: +
+31: ID, name=k
+31: ;
+32: ID, name=k
+32: :=
+32: ID, name=k
+32: +
+32: INTC, val=1
+33: reserved word: endwh
+34: reserved word: end
+36: reserved word: procedure
+36: ID, name=touch
+36: (
+36: reserved word: var
+36: ID, name=person
+36: ID, name=pp
+36: ;
+36: reserved word: var
+36: ID, name=bag
+36: ID, name=bb
+36: ;
+36: reserved word: integer
+36: ID, name=v
+36: ;
+36: reserved word: char
+36: ID, name=t
+36: )
+36: ;
+37: reserved word: begin
+38: ID, name=pp
+38: .
+38: ID, name=age
+38: :=
+38: ID, name=v
+38: ;
+39: ID, name=pp
+39: .
+39: ID, name=tag
+39: :=
+39: ID, name=t
+39: ;
+40: ID, name=pp
+40: .
+40: ID, name=scores
+40: [
+40: INTC, val=1
+40: ]
+40: :=
+40: ID, name=v
+40: ;
+41: ID, name=pp
+41: .
+41: ID, name=scores
+41: [
+41: INTC, val=2
+41: ]
+41: :=
+41: ID, name=v
+41: +
+41: INTC, val=1
+41: ;
+42: ID, name=pp
+42: .
+42: ID, name=scores
+42: [
+42: INTC, val=3
+42: ]
+42: :=
+42: ID, name=v
+42: +
+42: INTC, val=2
+42: ;
+43: ID, name=bb
+43: .
+43: ID, name=id
+43: :=
+43: ID, name=pp
+43: .
+43: ID, name=age
+43: ;
+44: ID, name=bb
+44: .
+44: ID, name=nums
+44: [
+44: INTC, val=1
+44: ]
+44: :=
+44: ID, name=pp
+44: .
+44: ID, name=scores
+44: [
+44: INTC, val=1
+44: ]
+44: ;
+45: ID, name=bb
+45: .
+45: ID, name=mark
+45: :=
+45: ID, name=pp
+45: .
+45: ID, name=tag
+46: reserved word: end
+48: reserved word: begin
+49: ID, name=i
+49: :=
+49: INTC, val=1
+49: ;
+50: ID, name=total
+50: :=
+50: INTC, val=0
+50: ;
+51: ID, name=ch
+51: :=
+51: CHARC, val='A'
+51: ;
+52: ID, name=fill
+52: (
+52: ID, name=a
+52: ,
+52: INTC, val=10
+52: )
+52: ;
+53: ID, name=touch
+53: (
+53: ID, name=p
+53: ,
+53: ID, name=b
+53: ,
+53: INTC, val=20
+53: ,
+53: ID, name=ch
+53: )
+53: ;
+54: ID, name=total
+54: :=
+54: ID, name=a
+54: [
+54: INTC, val=1
+54: ]
+54: +
+54: ID, name=p
+54: .
+54: ID, name=scores
+54: [
+54: INTC, val=2
+54: ]
+54: +
+54: ID, name=b
+54: .
+54: ID, name=nums
+54: [
+54: INTC, val=1
+54: ]
+54: ;
+55: reserved word: if
+55: ID, name=total
+55: <
+55: INTC, val=100
+55: reserved word: then
+56: reserved word: write
+56: (
+56: ID, name=total
+56: )
+57: reserved word: else
+58: reserved word: write
+58: (
+58: ID, name=b
+58: .
+58: ID, name=id
+58: )
+59: reserved word: fi
+59: ;
+60: reserved word: write
+60: (
+60: ID, name=p
+60: .
+60: ID, name=age
+60: )
+60: ;
+61: reserved word: write
+61: (
+61: ID, name=p
+61: .
+61: ID, name=scores
+61: [
+61: INTC, val=3
+61: ]
+61: )
+61: ;
+62: reserved word: write
+62: (
+62: ID, name=b
+62: .
+62: ID, name=mark
+62: )
+63: reserved word: end
+63: .

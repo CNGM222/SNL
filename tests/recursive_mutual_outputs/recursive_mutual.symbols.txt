@@ -1,0 +1,15 @@
+Symbol Table
+============
+[scope level=0, owner=<global>]
+  - name=char, kind=type, type=char, level=0
+  - name=even, kind=proc, type=<null>, level=0, label=proc_even_3, params=2, locals=0
+  - name=integer, kind=type, type=integer, level=0
+  - name=n, kind=var, type=integer, level=0, offset=0, label=g_n_0
+  - name=odd, kind=proc, type=<null>, level=0, label=proc_odd_2, params=2, locals=0
+  - name=oddflag, kind=var, type=integer, level=0, offset=0, label=g_oddflag_1
+  [scope level=1, owner=odd]
+    - name=outv, kind=param, type=integer, level=1, offset=16, byRef=true
+    - name=x, kind=param, type=integer, level=1, offset=12, byRef=false
+  [scope level=1, owner=even]
+    - name=outv, kind=param, type=integer, level=1, offset=16, byRef=true
+    - name=x, kind=param, type=integer, level=1, offset=12, byRef=false

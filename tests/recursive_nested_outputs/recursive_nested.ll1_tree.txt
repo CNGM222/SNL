@@ -1,0 +1,373 @@
+Program
+  ProgramHead
+    PROGRAM program
+    ProgramName
+      ID recnested
+  DeclarePart
+    TypeDec
+      EPS
+    VarDec
+      VarDeclaration
+        VAR var
+        VarDecList
+          TypeName
+            BaseType
+              INTEGER integer
+          VarIdList
+            ID ans
+            VarIdMore
+              EPS
+          SEMI ;
+          VarDecMore
+            EPS
+    ProcDec
+      ProcDeclaration
+        PROCEDURE procedure
+        ProcName
+          ID outer
+        LPAREN (
+        ParamList
+          ParamDecList
+            Param
+              TypeName
+                BaseType
+                  INTEGER integer
+              FormList
+                ID n
+                FidMore
+                  EPS
+            ParamMore
+              SEMI ;
+              ParamDecList
+                Param
+                  VAR var
+                  TypeName
+                    BaseType
+                      INTEGER integer
+                  FormList
+                    ID outv
+                    FidMore
+                      EPS
+                ParamMore
+                  EPS
+        RPAREN )
+        SEMI ;
+        ProcDecPart
+          DeclarePart
+            TypeDec
+              EPS
+            VarDec
+              VarDeclaration
+                VAR var
+                VarDecList
+                  TypeName
+                    BaseType
+                      INTEGER integer
+                  VarIdList
+                    ID base
+                    VarIdMore
+                      EPS
+                  SEMI ;
+                  VarDecMore
+                    EPS
+            ProcDec
+              ProcDeclaration
+                PROCEDURE procedure
+                ProcName
+                  ID inner
+                LPAREN (
+                ParamList
+                  ParamDecList
+                    Param
+                      TypeName
+                        BaseType
+                          INTEGER integer
+                      FormList
+                        ID k
+                        FidMore
+                          EPS
+                    ParamMore
+                      SEMI ;
+                      ParamDecList
+                        Param
+                          VAR var
+                          TypeName
+                            BaseType
+                              INTEGER integer
+                          FormList
+                            ID acc
+                            FidMore
+                              EPS
+                        ParamMore
+                          EPS
+                RPAREN )
+                SEMI ;
+                ProcDecPart
+                  DeclarePart
+                    TypeDec
+                      EPS
+                    VarDec
+                      EPS
+                    ProcDec
+                      EPS
+                ProcBody
+                  ProgramBody
+                    BEGIN begin
+                    StmList
+                      Stm
+                        ConditionalStm
+                          IF if
+                          RelExp
+                            Exp
+                              Term
+                                Factor
+                                  Variable
+                                    ID k
+                                    VariMore
+                                      EPS
+                                OtherFactor
+                                  EPS
+                              OtherTerm
+                                EPS
+                            OtherRelE
+                              CmpOp
+                                EQ =
+                              Exp
+                                Term
+                                  Factor
+                                    INTC 0
+                                  OtherFactor
+                                    EPS
+                                OtherTerm
+                                  EPS
+                          THEN then
+                          StmList
+                            Stm
+                              ReturnStm
+                                RETURN return
+                                ReturnTail
+                                  EPS
+                            StmMore
+                              EPS
+                          ELSE else
+                          StmList
+                            Stm
+                              ID acc
+                              AssCall
+                                AssignmentRest
+                                  VariMore
+                                    EPS
+                                  ASSIGN :=
+                                  Exp
+                                    Term
+                                      Factor
+                                        Variable
+                                          ID acc
+                                          VariMore
+                                            EPS
+                                      OtherFactor
+                                        EPS
+                                    OtherTerm
+                                      AddOp
+                                        PLUS +
+                                      Exp
+                                        Term
+                                          Factor
+                                            Variable
+                                              ID base
+                                              VariMore
+                                                EPS
+                                          OtherFactor
+                                            EPS
+                                        OtherTerm
+                                          EPS
+                            StmMore
+                              SEMI ;
+                              StmList
+                                Stm
+                                  ID inner
+                                  AssCall
+                                    CallStmRest
+                                      LPAREN (
+                                      ActParamList
+                                        Exp
+                                          Term
+                                            Factor
+                                              Variable
+                                                ID k
+                                                VariMore
+                                                  EPS
+                                            OtherFactor
+                                              EPS
+                                          OtherTerm
+                                            AddOp
+                                              MINUS -
+                                            Exp
+                                              Term
+                                                Factor
+                                                  INTC 1
+                                                OtherFactor
+                                                  EPS
+                                              OtherTerm
+                                                EPS
+                                        ActParamMore
+                                          COMMA ,
+                                          ActParamList
+                                            Exp
+                                              Term
+                                                Factor
+                                                  Variable
+                                                    ID acc
+                                                    VariMore
+                                                      EPS
+                                                OtherFactor
+                                                  EPS
+                                              OtherTerm
+                                                EPS
+                                            ActParamMore
+                                              EPS
+                                      RPAREN )
+                                StmMore
+                                  EPS
+                          FI fi
+                      StmMore
+                        EPS
+                    END end
+                ProcDecMore
+                  EPS
+        ProcBody
+          ProgramBody
+            BEGIN begin
+            StmList
+              Stm
+                ID base
+                AssCall
+                  AssignmentRest
+                    VariMore
+                      EPS
+                    ASSIGN :=
+                    Exp
+                      Term
+                        Factor
+                          Variable
+                            ID n
+                            VariMore
+                              EPS
+                        OtherFactor
+                          EPS
+                      OtherTerm
+                        EPS
+              StmMore
+                SEMI ;
+                StmList
+                  Stm
+                    ID outv
+                    AssCall
+                      AssignmentRest
+                        VariMore
+                          EPS
+                        ASSIGN :=
+                        Exp
+                          Term
+                            Factor
+                              INTC 0
+                            OtherFactor
+                              EPS
+                          OtherTerm
+                            EPS
+                  StmMore
+                    SEMI ;
+                    StmList
+                      Stm
+                        ID inner
+                        AssCall
+                          CallStmRest
+                            LPAREN (
+                            ActParamList
+                              Exp
+                                Term
+                                  Factor
+                                    INTC 3
+                                  OtherFactor
+                                    EPS
+                                OtherTerm
+                                  EPS
+                              ActParamMore
+                                COMMA ,
+                                ActParamList
+                                  Exp
+                                    Term
+                                      Factor
+                                        Variable
+                                          ID outv
+                                          VariMore
+                                            EPS
+                                      OtherFactor
+                                        EPS
+                                    OtherTerm
+                                      EPS
+                                  ActParamMore
+                                    EPS
+                            RPAREN )
+                      StmMore
+                        EPS
+            END end
+        ProcDecMore
+          EPS
+  ProgramBody
+    BEGIN begin
+    StmList
+      Stm
+        ID outer
+        AssCall
+          CallStmRest
+            LPAREN (
+            ActParamList
+              Exp
+                Term
+                  Factor
+                    INTC 4
+                  OtherFactor
+                    EPS
+                OtherTerm
+                  EPS
+              ActParamMore
+                COMMA ,
+                ActParamList
+                  Exp
+                    Term
+                      Factor
+                        Variable
+                          ID ans
+                          VariMore
+                            EPS
+                      OtherFactor
+                        EPS
+                    OtherTerm
+                      EPS
+                  ActParamMore
+                    EPS
+            RPAREN )
+      StmMore
+        SEMI ;
+        StmList
+          Stm
+            OutputStm
+              WRITE write
+              LPAREN (
+              Exp
+                Term
+                  Factor
+                    Variable
+                      ID ans
+                      VariMore
+                        EPS
+                  OtherFactor
+                    EPS
+                OtherTerm
+                  EPS
+              RPAREN )
+          StmMore
+            EPS
+    END end
+  DOT .

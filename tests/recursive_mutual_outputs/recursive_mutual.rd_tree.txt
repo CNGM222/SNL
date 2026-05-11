@@ -1,0 +1,55 @@
+ProK
+  PheadK recmutual
+  VarK
+    DecK IntegerK n oddflag
+  ProcDecK odd
+    ParamK
+      DecK value param: IntegerK x
+      DecK var param: IntegerK outv
+    StmLK
+      StmtK If
+        ExpK Op =
+          ExpK x IdV
+          ExpK Const 0
+        ThenK
+          StmLK
+            StmtK Assign
+              ExpK outv IdV
+              ExpK Const 0
+        ElseK
+          StmLK
+            StmtK Call even
+              ExpK Op -
+                ExpK x IdV
+                ExpK Const 1
+              ExpK outv IdV
+  ProcDecK even
+    ParamK
+      DecK value param: IntegerK x
+      DecK var param: IntegerK outv
+    StmLK
+      StmtK If
+        ExpK Op =
+          ExpK x IdV
+          ExpK Const 0
+        ThenK
+          StmLK
+            StmtK Assign
+              ExpK outv IdV
+              ExpK Const 1
+        ElseK
+          StmLK
+            StmtK Call odd
+              ExpK Op -
+                ExpK x IdV
+                ExpK Const 1
+              ExpK outv IdV
+  StmLK
+    StmtK Assign
+      ExpK n IdV
+      ExpK Const 7
+    StmtK Call odd
+      ExpK n IdV
+      ExpK oddflag IdV
+    StmtK Write
+      ExpK oddflag IdV

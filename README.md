@@ -33,9 +33,43 @@ snlc --input test.snl --output test.asm --mode all
 - `sem`：词法 + 递归下降 + 语义分析
 - `all`：全部流程，并尝试生成 MIPS
 
+## 网页版前端
+
+项目提供一个本地 Web 前端（`snlc_webui`），用于：
+
+- 选择 `tests/` 目录下的 `.snl` 测试文件
+- 触发编译
+- 直接查看输出结果（`errors/symbols/tokens/rd_tree/ll1_tree/asm`）
+
+### 启动步骤
+
+1. 构建：
+
+```bash
+cmake --build build --config Debug
+```
+
+2. 启动服务（默认端口 `8088`）：
+
+```bash
+.\build\Debug\snlc_webui.exe
+```
+
+可选：指定端口（例如 `8090`）：
+
+```bash
+.\build\Debug\snlc_webui.exe 8090
+```
+
+3. 浏览器打开：
+
+```text
+http://127.0.0.1:8088
+```
+
 ## 输出文件
 
-假设输入文件是 `demo.snl`，会生成：
+假设输入文件是 `demo.snl`，会在同目录下生成一个 `demo_outputs/` 文件夹，包含：
 
 - `demo.tokens.txt`：Token 序列
 - `demo.rd_tree.txt`：递归下降语法树
@@ -43,6 +77,8 @@ snlc --input test.snl --output test.asm --mode all
 - `demo.symbols.txt`：语义分析阶段导出的符号表
 - `demo.errors.txt`：词法/语法/语义/代码生成错误信息
 - `demo.asm`：MIPS 汇编（仅在 `all` 且无阻塞错误时生成）
+
+如果使用 `--output` 指定汇编文件名，仍会输出到同一个 `*_outputs` 目录中（使用你指定的文件名）。
 
 ## 说明
 
@@ -59,18 +95,6 @@ snlc --input test.snl --output test.asm --mode all
 - `tests/recursive_direct.snl`：直接递归
 - `tests/recursive_mutual.snl`：互递归
 - `tests/recursive_nested.snl`：嵌套递归（验证静态链）
-
-执行测试脚本：
-
-```powershell
-.\tests\run_recursive_tests.ps1
-```
-
-如需指定编译器路径：
-
-```powershell
-.\tests\run_recursive_tests.ps1 -CompilerPath ".\build\Release\snlc.exe"
-```
 
 ## 当前支持的数据结构（SNL）
 

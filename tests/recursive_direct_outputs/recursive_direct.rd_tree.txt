@@ -1,0 +1,37 @@
+ProK
+  PheadK recdirect
+  VarK
+    DecK IntegerK ans
+  ProcDecK sumto
+    ParamK
+      DecK value param: IntegerK n
+      DecK var param: IntegerK outv
+    StmLK
+      StmtK If
+        ExpK Op <
+          ExpK n IdV
+          ExpK Const 1
+        ThenK
+          StmLK
+            StmtK Return
+        ElseK
+          StmLK
+            StmtK Assign
+              ExpK outv IdV
+              ExpK Op +
+                ExpK outv IdV
+                ExpK n IdV
+            StmtK Call sumto
+              ExpK Op -
+                ExpK n IdV
+                ExpK Const 1
+              ExpK outv IdV
+  StmLK
+    StmtK Assign
+      ExpK ans IdV
+      ExpK Const 0
+    StmtK Call sumto
+      ExpK Const 5
+      ExpK ans IdV
+    StmtK Write
+      ExpK ans IdV
