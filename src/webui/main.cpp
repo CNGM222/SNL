@@ -161,6 +161,53 @@ static std::string parseJsonStringField(const std::string& json, const std::stri
     return "";
 }
 
+static std::string urlDecode(const std::string& in) {
+    std::string out;
+    out.reserve(in.size());
+    auto hexVal = [](char ch) -> int {
+        if (ch >= '0' && ch <= '9') return ch - '0';
+        if (ch >= 'a' && ch <= 'f') return 10 + (ch - 'a');
+        if (ch >= 'A' && ch <= 'F') return 10 + (ch - 'A');
+        return -1;
+    };
+    for (size_t i = 0; i < in.size(); ++i) {
+        char c = in[i];
+        if (c == '+' ) {
+            out.push_back(' ');
+            continue;
+        }
+        if (c == '%' && i + 2 < in.size()) {
+            int hi = hexVal(in[i + 1]);
+            int lo = hexVal(in[i + 2]);
+            if (hi >= 0 && lo >= 0) {
+                out.push_back(static_cast<char>((hi << 4) | lo));
+                i += 2;
+                continue;
+            }
+        }
+        out.push_back(c);
+    }
+    return out;
+}
+
+static std::string getQueryParam(const std::string& query, const std::string& key) {
+    size_t start = 0;
+    while (start <= query.size()) {
+        size_t end = query.find('&', start);
+        if (end == std::string::npos) end = query.size();
+        std::string pair = query.substr(start, end - start);
+        size_t eq = pair.find('=');
+        std::string k = (eq == std::string::npos) ? pair : pair.substr(0, eq);
+        std::string v = (eq == std::string::npos) ? "" : pair.substr(eq + 1);
+        if (k == key) {
+            return urlDecode(v);
+        }
+        if (end == query.size()) break;
+        start = end + 1;
+    }
+    return "";
+}
+
 static std::string httpReason(int statusCode) {
     switch (statusCode) {
         case 200: return "OK";
@@ -288,6 +335,7 @@ static std::string buildIndexHtml() {
       margin-bottom: 14px;
     }
     h1 { margin: 0 0 8px; font-size: 22px; }
+    h2 { margin: 0 0 10px; font-size: 16px; }
     p.tip { margin: 0; color: var(--muted); }
     .row { display: grid; grid-template-columns: 1fr 130px 130px 120px; gap: 10px; margin-top: 14px; }
     select, button {
@@ -370,6 +418,11 @@ static std::string buildIndexHtml() {
     </div>
 
     <div class="card">
+      <h2>Selected Source (.snl)</h2>
+      <pre id="sourceView">No file selected.</pre>
+    </div>
+
+    <div class="card">
       <div id="tabs" class="tabs"></div>
       <pre id="contentView">No results yet.</pre>
     </div>
@@ -381,6 +434,7 @@ static std::string buildIndexHtml() {
     const refreshBtn = document.getElementById("refreshBtn");
     const compileBtn = document.getElementById("compileBtn");
     const statusEl = document.getElementById("status");
+    const sourceView = document.getElementById("sourceView");
     const tabsEl = document.getElementById("tabs");
     const contentView = document.getElementById("contentView");
 
@@ -430,7 +484,28 @@ static std::string buildIndexHtml() {
         opt.textContent = "No .snl files found";
         fileSelect.appendChild(opt);
       }
+      await loadSourcePreview();
       setStatus("File list loaded.");
+    }
+
+    async function loadSourcePreview() {
+      const file = fileSelect.value;
+      if (!file) {
+        sourceView.textContent = "No file selected.";
+        return;
+      }
+      sourceView.textContent = "Loading source...";
+      try {
+        const res = await fetch("/api/source?file=" + encodeURIComponent(file));
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          sourceView.textContent = "Failed to load source: " + (data.message || "Unknown error");
+          return;
+        }
+        sourceView.textContent = data.content || "";
+      } catch (err) {
+        sourceView.textContent = "Request failed: " + err;
+      }
     }
 
     async function compileSelected() {
@@ -479,6 +554,7 @@ static std::string buildIndexHtml() {
     }
 
     refreshBtn.onclick = () => loadFiles();
+    fileSelect.onchange = () => loadSourcePreview();
     compileBtn.onclick = () => compileSelected();
     loadFiles();
   </script>
@@ -672,6 +748,33 @@ private:
         return modes.count(mode) > 0;
     }
 
+    bool resolveSnlPath(const std::string& relFile, fs::path& inputPath, std::string& message) const {
+        fs::path requested = fs::path(relFile);
+        if (requested.empty()) {
+            message = "File is required.";
+            return false;
+        }
+        if (requested.is_absolute()) {
+            message = "Absolute path is not allowed.";
+            return false;
+        }
+        fs::path testsCanon = fs::weakly_canonical(testsRoot_);
+        inputPath = fs::weakly_canonical(projectRoot_ / requested);
+        if (!fs::exists(inputPath)) {
+            message = "Input file not found.";
+            return false;
+        }
+        if (toLowerAscii(inputPath.extension().string()) != ".snl") {
+            message = "Only .snl files are allowed.";
+            return false;
+        }
+        if (!pathStartsWith(inputPath, testsCanon)) {
+            message = "Only files under tests/ are allowed.";
+            return false;
+        }
+        return true;
+    }
+
     CompileResult compileFile(const std::string& relFile, const std::string& mode) const {
         CompileResult res;
         if (!modeValid(mode)) {
@@ -679,24 +782,8 @@ private:
             return res;
         }
 
-        fs::path requested = fs::path(relFile);
-        if (requested.is_absolute()) {
-            res.message = "Absolute path is not allowed.";
-            return res;
-        }
-        fs::path inputPath = fs::weakly_canonical(projectRoot_ / requested);
-        fs::path testsCanon = fs::weakly_canonical(testsRoot_);
-
-        if (!fs::exists(inputPath)) {
-            res.message = "Input file not found.";
-            return res;
-        }
-        if (toLowerAscii(inputPath.extension().string()) != ".snl") {
-            res.message = "Only .snl files are allowed.";
-            return res;
-        }
-        if (!pathStartsWith(inputPath, testsCanon)) {
-            res.message = "Only files under tests/ are allowed.";
+        fs::path inputPath;
+        if (!resolveSnlPath(relFile, inputPath, res.message)) {
             return res;
         }
         if (!fs::exists(compilerPath_)) {
@@ -777,6 +864,17 @@ private:
         return oss.str();
     }
 
+    std::string buildSourceJson(bool ok, const std::string& message, const std::string& file, const std::string& content) const {
+        std::ostringstream oss;
+        oss << "{";
+        oss << "\"ok\":" << (ok ? "true" : "false") << ",";
+        oss << "\"message\":\"" << jsonEscape(message) << "\",";
+        oss << "\"file\":\"" << jsonEscape(file) << "\",";
+        oss << "\"content\":\"" << jsonEscape(content) << "\"";
+        oss << "}";
+        return oss.str();
+    }
+
     void handleClient(SOCKET clientSock) {
         HttpRequest req;
         if (!parseRequest(clientSock, req)) {
@@ -785,8 +883,12 @@ private:
         }
 
         std::string path = req.path;
+        std::string query;
         size_t q = path.find('?');
-        if (q != std::string::npos) path = path.substr(0, q);
+        if (q != std::string::npos) {
+            query = path.substr(q + 1);
+            path = path.substr(0, q);
+        }
 
         if (req.method == "GET" && path == "/") {
             sendResponse(clientSock, 200, "text/html", buildIndexHtml());
@@ -794,6 +896,27 @@ private:
         }
         if (req.method == "GET" && path == "/api/files") {
             sendResponse(clientSock, 200, "application/json", buildFilesJson());
+            return;
+        }
+        if (req.method == "GET" && path == "/api/source") {
+            std::string file = getQueryParam(query, "file");
+            fs::path inputPath;
+            std::string message;
+            if (!resolveSnlPath(file, inputPath, message)) {
+                sendResponse(clientSock, 400, "application/json", buildSourceJson(false, message, file, ""));
+                return;
+            }
+            std::string content;
+            if (!readFileText(inputPath, content)) {
+                sendResponse(clientSock, 500, "application/json", buildSourceJson(false, "Failed to read file.", file, ""));
+                return;
+            }
+            sendResponse(
+                clientSock,
+                200,
+                "application/json",
+                buildSourceJson(true, "", fs::relative(inputPath, projectRoot_).generic_string(), content)
+            );
             return;
         }
         if (req.method == "POST" && path == "/api/compile") {
@@ -809,7 +932,7 @@ private:
             return;
         }
 
-        if (path == "/api/compile" || path == "/api/files" || path == "/") {
+        if (path == "/api/compile" || path == "/api/files" || path == "/api/source" || path == "/") {
             sendResponse(clientSock, 405, "text/plain", "Method Not Allowed");
         } else {
             sendResponse(clientSock, 404, "text/plain", "Not Found");
