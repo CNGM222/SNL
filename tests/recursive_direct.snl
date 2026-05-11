@@ -1,0 +1,19 @@
+program recdirect
+var
+  integer ans;
+
+procedure sumto(integer n; var integer outv);
+begin
+  if n < 1 then
+    return
+  else
+    outv := outv + n;
+    sumto(n - 1, outv)
+  fi
+end
+
+begin
+  ans := 0;
+  sumto(5, ans);
+  write(ans)
+end.

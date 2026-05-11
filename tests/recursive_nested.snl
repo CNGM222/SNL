@@ -1,0 +1,26 @@
+program recnested
+var
+  integer ans;
+
+procedure outer(integer n; var integer outv);
+var
+  integer base;
+procedure inner(integer k; var integer acc);
+begin
+  if k = 0 then
+    return
+  else
+    acc := acc + base;
+    inner(k - 1, acc)
+  fi
+end
+begin
+  base := n;
+  outv := 0;
+  inner(3, outv)
+end
+
+begin
+  outer(4, ans);
+  write(ans)
+end.

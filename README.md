@@ -40,15 +40,37 @@ snlc --input test.snl --output test.asm --mode all
 - `demo.tokens.txt`：Token 序列
 - `demo.rd_tree.txt`：递归下降语法树
 - `demo.ll1_tree.txt`：LL(1) 语法树
+- `demo.symbols.txt`：语义分析阶段导出的符号表
 - `demo.errors.txt`：词法/语法/语义/代码生成错误信息
 - `demo.asm`：MIPS 汇编（仅在 `all` 且无阻塞错误时生成）
 
 ## 说明
 
 - 过程调用支持值参和变参（`var`）
+- 支持过程递归、互递归、嵌套递归调用
 - 支持数组和记录类型的语义检查与地址计算
 - 递归下降与 LL(1) 都会输出独立语法树和错误信息
 - 若有错误，优先看 `*.errors.txt`
+
+## 递归测试
+
+仓库内置了递归相关用例：
+
+- `tests/recursive_direct.snl`：直接递归
+- `tests/recursive_mutual.snl`：互递归
+- `tests/recursive_nested.snl`：嵌套递归（验证静态链）
+
+执行测试脚本：
+
+```powershell
+.\tests\run_recursive_tests.ps1
+```
+
+如需指定编译器路径：
+
+```powershell
+.\tests\run_recursive_tests.ps1 -CompilerPath ".\build\Release\snlc.exe"
+```
 
 ## 当前支持的数据结构（SNL）
 

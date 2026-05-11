@@ -337,11 +337,16 @@ private:
 
         for (auto& pd : declPart->procDecls) {
             if (!pd->procInfo) continue;
-            analyzeProcedure(*pd, scope);
+            prepareProcedureHeader(*pd, scope);
+        }
+
+        for (auto& pd : declPart->procDecls) {
+            if (!pd->procInfo) continue;
+            analyzeProcedureBody(*pd);
         }
     }
 
-    void analyzeProcedure(ProcDecl& procDecl, Scope* parentScope) {
+    void prepareProcedureHeader(ProcDecl& procDecl, Scope* parentScope) {
         ProcInfo* info = procDecl.procInfo;
         Scope* procScope = createChildScope(parentScope, info);
         info->scope = procScope;
@@ -374,7 +379,12 @@ private:
                 info->params.push_back(raw);
             }
         }
+    }
 
+    void analyzeProcedureBody(ProcDecl& procDecl) {
+        ProcInfo* info = procDecl.procInfo;
+        if (!info || !info->scope) return;
+        Scope* procScope = info->scope;
         analyzeDeclPart(procDecl.declPart.get(), procScope);
         analyzeStmtList(procDecl.body, procScope, info);
     }

@@ -1,0 +1,63 @@
+program allstruct
+
+type
+  idx = integer;
+  letter = char;
+  intarr = array[1..5] of integer;
+  person = record
+    integer age;
+    char tag;
+    array[1..3] of integer scores;
+  end;
+  bag = record
+    integer id;
+    array[1..5] of integer nums;
+    char mark;
+  end;
+
+var
+  idx i, total;
+  letter ch;
+  intarr a;
+  person p;
+  bag b;
+
+procedure fill(var intarr arr; integer base);
+var
+  integer k;
+begin
+  k := 1;
+  while k < 6 do
+    arr[k] := base + k;
+    k := k + 1
+  endwh
+end
+
+procedure touch(var person pp; var bag bb; integer v; char t);
+begin
+  pp.age := v;
+  pp.tag := t;
+  pp.scores[1] := v;
+  pp.scores[2] := v + 1;
+  pp.scores[3] := v + 2;
+  bb.id := pp.age;
+  bb.nums[1] := pp.scores[1];
+  bb.mark := pp.tag
+end
+
+begin
+  i := 1;
+  total := 0;
+  ch := 'A';
+  fill(a, 10);
+  touch(p, b, 20, ch);
+  total := a[1] + p.scores[2] + b.nums[1];
+  if total < 100 then
+    write(total)
+  else
+    write(b.id)
+  fi;
+  write(p.age);
+  write(p.scores[3]);
+  write(b.mark)
+end.
